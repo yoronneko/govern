@@ -10,15 +10,22 @@
 # After placing configuration files in ~/local/ directory, we can manage
 # processes by typing following commands:
 #
-#   govern.sh start: start all processes
-#   govern.sh stop:  stop  all processes
-#   govern.sh status, or govern.sh: show status  of all processes
+#   govern.sh start:
+#       start all processes
+#   govern.sh stop:
+#       stop  all processes
+#   govern.sh restart:
+#       restart  all processes
+#   govern.sh status, or govern.sh:
+#       show status  of all processes
 #   govern.sh sample.conf.sh start:
-#       start a process described in ~/local/sample.conf.sh
+#       start a process described in the configration ~/local/sample.conf.sh
 #   govern.sh sample.conf.sh stop:
-#       stop the process described in ~/local/sample.conf.sh
+#       stop the process related to sample.conf.sh
+#   govern.sh sample.conf.sh restart:
+#       restart the process related to sample.conf.sh
 #   govern.sh sample.conf.sh status, or govern.sh sample.conf.sh:
-#       show the process status described in ~/local/sample.conf.sh
+#       show the process status related to sample.conf.sh
 
 BASE=$HOME/local
 if [[ ! -d $BASE ]]; then
