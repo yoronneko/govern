@@ -3,7 +3,9 @@ Linux process governer: a simple shell script to manage multiple processes
 
 ## What govern.sh is
 
-This shell script executes multiple processes specified in ``~/local/`` directory as a Linux user. We can start multple processes described in the configuration files in ``~/local/*.conf.sh`` by using cron command.
+This shell script manages multiple processes defined in the configuration files located at ``~/local/*.conf.sh``. The shell script has released as an open source software and is publicly accessible on GitHub.
+
+his govern.sh script can be executed from ether an interactive shell or through a cron job. Here's how you would initiate it from a cron job:
 
 ```sh
 $ crontab -e
@@ -12,11 +14,11 @@ $ crontab -e
 
 ## Usage
 
-To start all processes listed in ``~/local/`` directory, type ``govern.sh start`` and the process name as well as process ID (PID) is shown.
+To initiate all processes specified in the ``~/local/`` directory, enter ``govern.sh start``. The name and process ID (PID) of each process will be displayed.
 
-To stop the all processes, type ``govern.sh stop``.
+To terminate all processes, type ``govern.sh stop``.
 
-To show process status, type ``govern.sh status`` or simply ``govern.sh`` to list status of all processes with PID like:
+To view the status of processes, type ``govern.sh status``. Alternatively, you can simply enter ``govern.sh`` to list status and PID of all processes, as show below:
 ```sh
 pi@rpi3b:~ $ govern.sh
 clas.conf.sh running at pid 30185
@@ -27,9 +29,9 @@ sf9p.conf.sh running at pid 2897
 pi@rpi3b:~ $
 ```
 
-To start, stop, or show a specific process, say, type ``govern.sh sample.conf.sh start`` to start a process described in sample.conf.sh.
+If you want to start, stop, or display a specific process, for example, use ``govern.sh sample.conf.sh start`` to initiate the process defined in sample.conf.sh.
 
-The configration file requires setting the environmental variables of CMD, ARGS, and MARK. Please see ``local/sample.conf.sh`` for more details.
+The configuration file necessitates the definition of environment variables of CMD, ARGS, and MARK. For further details, please refer to ``local/sample.conf.sh``.
 
 ## License
 
