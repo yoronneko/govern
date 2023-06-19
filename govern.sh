@@ -1,4 +1,24 @@
 #!/bin/bash
+#
+# govern.sh
+#  Linux process governer: a simple shell script to manage multiple processes
+#
+# Copyright (c) 2023 Satoshi Takahashi, all rights reserved.
+#
+# Released under BSD 2-clause license.
+#
+# After placing configuration files in ~/local/ directory, we can manage
+# processes by typing following commands:
+#
+#   govern.sh start: start all processes
+#   govern.sh stop:  stop  all processes
+#   govern.sh status, or govern.sh: show status  of all processes
+#   govern.sh sample.conf.sh start:
+#       start a process described in ~/local/sample.conf.sh
+#   govern.sh sample.conf.sh stop:
+#       stop the process described in ~/local/sample.conf.sh
+#   govern.sh sample.conf.sh status, or govern.sh sample.conf.sh:
+#       show the process status described in ~/local/sample.conf.sh
 
 BASE=$HOME/local
 if [[ ! -d $BASE ]]; then
