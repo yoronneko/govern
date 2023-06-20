@@ -5,7 +5,7 @@ Linux process governer: a simple shell script to manage multiple processes
 
 This shell script manages multiple processes defined in the configuration files located at ``~/local/*.conf.sh``. The shell script has released as an open source software and is publicly accessible on GitHub.
 
-his govern.sh script can be executed from ether an interactive shell or through a cron job. Here's how you would initiate it from a cron job:
+This govern.sh script can be executed from ether an interactive shell or through a cron job. Here's how you would initiate it from a cron job:
 
 ```sh
 $ crontab -e
