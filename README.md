@@ -1,5 +1,5 @@
 # govern
-Linux process governer: a simple shell script to manage multiple processes
+Linux process governor: a simple shell script to manage multiple processes
 
 ## What govern.sh is
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # govern.sh
-#  Linux process governer: a simple shell script to manage multiple processes
+#  Linux process governor: a simple shell script to manage multiple processes
 #
 # Copyright (c) 2023 Satoshi Takahashi, all rights reserved.
 #
