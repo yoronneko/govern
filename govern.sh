@@ -32,7 +32,7 @@ if [[ ! -d $BASE ]]; then
     echo "$BASE directory is not found."
     exit 1
 fi
-cd $BASE
+cd "$BASE" || exit
 
 cmd_start()
 {
@@ -40,7 +40,11 @@ cmd_start()
     local MARK="$2"
     local CMD="$3"
     local ARGS="$4"
-    $CMD $ARGS > /dev/null 2>&1 < /dev/null &
+    # Use eval so that quoted arguments in ARGS are preserved as
+    # single arguments when executing the command.  This allows
+    # passing values containing spaces through the configuration
+    # file.
+    eval "$CMD $ARGS" > /dev/null 2>&1 < /dev/null &
     # cannot obtain status code for background process directly as
     # if [ $? != 0 ]; then echo "${0##*/}: cannot start"; exit 1; fi
     sleep 0.1
@@ -56,7 +60,7 @@ cmd_stop()
 {
     local pid="$1"
     local conf="$2"
-    kill $pid
+    kill "$pid"
     echo "$conf stopped (pid $pid)"
 }
 
@@ -115,15 +119,15 @@ do_cmd()
 
 # glob conf files
 # https://programwiz.org/2021/05/09/shellscript-in-bash-how-to-files-loop/
-CONF=$(find *.conf.sh -print)
+mapfile -t CONF < <(find . -maxdepth 1 -name '*.conf.sh' -print)
 
 # determine whether specific conf file is selected or not
 # https://qiita.com/Hayao0819/items/0e04b39b0804a0d16020
 if printf '%s\n' "${CONF[@]}" | grep -qx "$1"; then
     conf="$1"
-    if [ -e ./"$conf" ]; then
+    if [ -e "./$conf" ]; then
         unset MARK CMD ARGS
-	    . ./$conf
+            . "./$conf"
         [[ $? != 0 ]] && exit 1
         if [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
             echo "${0##*/}: \$MARK, \$CMD or \$ARGS not defined in $conf."
@@ -134,10 +138,10 @@ if printf '%s\n' "${CONF[@]}" | grep -qx "$1"; then
     exit 0
 fi
 
-for conf in ${CONF[@]}; do
-    if [ -e $conf ]; then
+for conf in "${CONF[@]}"; do
+    if [ -e "$conf" ]; then
         unset MARK CMD ARGS
-	    . ./$conf
+            . "./$conf"
         [[ $? != 0 ]] && continue
         if [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
             echo "${0##*/}: \$MARK, \$CMD or \$ARGS not defined in $conf."

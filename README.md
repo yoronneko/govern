@@ -33,9 +33,17 @@ If you want to start, stop, or display a specific process, for example, use ``go
 
 The configuration file necessitates the definition of environment variables of CMD, ARGS, and MARK. For further details, please refer to ``local/sample.conf.sh``.
 
-## Known issue
+## Passing arguments with spaces
 
-A single argument containing spaces cannot be represented. For example, one of the arguments for ``str2str ... -a "JAVGRANT_G5T NONE" ...`` is ``JAVGRANT_G5T NONE``. However, I could not pass this string containing spaces as a single argument to the program via an environment variable.
+Arguments containing spaces can be passed to commands by quoting them in the
+``ARGS`` variable within a configuration file.  For example:
+
+```sh
+ARGS='-a "JAVGRANT_G5T NONE"'
+```
+
+The command executed by ``govern.sh`` will receive ``JAVGRANT_G5T NONE`` as a
+single argument.
 
 ## License
 
