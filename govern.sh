@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # govern.sh
-#  Linux process governer: a simple shell script to manage multiple processes
+#  Linux process governor: a simple shell script to manage multiple processes
 #
 # Copyright (c) 2023 Satoshi Takahashi, all rights reserved.
 #
@@ -39,12 +39,9 @@ cmd_start()
     local conf="$1"
     local MARK="$2"
     local CMD="$3"
-    local ARGS="$4"
-    # Use eval so that quoted arguments in ARGS are preserved as
-    # single arguments when executing the command.  This allows
-    # passing values containing spaces through the configuration
-    # file.
-    eval "$CMD $ARGS" > /dev/null 2>&1 < /dev/null &
+    shift 3
+    local -a ARGS=("$@")
+    "$CMD" "${ARGS[@]}" > /dev/null 2>&1 < /dev/null &
     # cannot obtain status code for background process directly as
     # if [ $? != 0 ]; then echo "${0##*/}: cannot start"; exit 1; fi
     sleep 0.1
@@ -68,7 +65,7 @@ get_pid()
 {
     local MARK="$1"
     ps -axw | grep "$MARK" | grep -v grep | \
-        (read pid args_to_discard; echo $pid)
+        (read pid args_to_discard; echo "$pid")
 }
 
 do_cmd()
@@ -76,13 +73,14 @@ do_cmd()
     local conf=$1
     local MARK=$2
     local CMD=$3
-    local ARGS=$4
-    local ACTION=$5
+    shift 3
+    local ACTION="${!#}"
+    local -a ARGS=("${@:1:$#-1}")
     pid=$(get_pid "$MARK")
     case "$ACTION" in
         start)
             if [[ "$pid" == "" ]]; then
-                cmd_start "$conf" "$MARK" "$CMD" "$ARGS"
+                cmd_start "$conf" "$MARK" "$CMD" "${ARGS[@]}"
             else
                 echo "$conf already running at pid $pid"
             fi
@@ -99,7 +97,7 @@ do_cmd()
                 cmd_stop "$pid" "$conf"
                 sleep 0.5
             fi
-            cmd_start "$conf" "$MARK" "$CMD" "$ARGS"
+            cmd_start "$conf" "$MARK" "$CMD" "${ARGS[@]}"
             ;;
         "" | status)
             if [[ "$pid" == "" ]]; then
@@ -127,13 +125,13 @@ if printf '%s\n' "${CONF[@]}" | grep -qx "$1"; then
     conf="$1"
     if [ -e "./$conf" ]; then
         unset MARK CMD ARGS
-            . "./$conf"
+            . ./"$conf"
         [[ $? != 0 ]] && exit 1
         if [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
             echo "${0##*/}: \$MARK, \$CMD or \$ARGS not defined in $conf."
             exit 1
         fi
-        do_cmd "$conf" "$MARK" "$CMD" "$ARGS" "$2"
+        do_cmd "$conf" "$MARK" "$CMD" "${ARGS[@]}" "$2"
     fi
     exit 0
 fi
@@ -141,13 +139,13 @@ fi
 for conf in "${CONF[@]}"; do
     if [ -e "$conf" ]; then
         unset MARK CMD ARGS
-            . "./$conf"
+            . ./"$conf"
         [[ $? != 0 ]] && continue
         if [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
             echo "${0##*/}: \$MARK, \$CMD or \$ARGS not defined in $conf."
             exit 1
         fi
-        do_cmd "$conf" "$MARK" "$CMD" "$ARGS" "$1"
+        do_cmd "$conf" "$MARK" "$CMD" "${ARGS[@]}" "$1"
     fi
 done
 
