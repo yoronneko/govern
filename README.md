@@ -12,6 +12,24 @@ $ crontab -e
 @reboot cd /home/pi/bin; ./govern.sh start
 ```
 
+## Repository Overview for New Contributors
+
+### Structure
+- **`govern.sh`** – central Bash script that starts, stops, and checks the status of processes.
+- **`local/*.conf.sh`** – configuration files describing each process via `CMD`, `ARGS`, and `MARK`.
+- **`README.md`** – documentation including usage, testing, and licensing information.
+
+### Important Notes
+- `govern.sh` expects the `~/local` directory to exist and exits if it is missing.
+- Run `govern.sh start` to launch all processes, `stop` to halt them, and `status` or no argument to view their state.
+- Arguments containing spaces cannot be passed as a single string through environment variables; consider quoting or extending the script when needed.
+
+### Suggested Next Steps
+1. Study `local/sample.conf.sh` and create your own configuration, ensuring the `MARK` uniquely identifies each process.
+2. Trace functions such as `get_pid` and `do_cmd` in `govern.sh` to understand how process management works.
+3. Explore ways to handle arguments with spaces—advanced quoting techniques or script enhancements may be required.
+4. Try automating execution, for example with a `cron` entry using `@reboot`.
+
 ## Usage
 
 To initiate all processes specified in the ``~/local/`` directory, enter ``govern.sh start``. The name and process ID (PID) of each process will be displayed.
