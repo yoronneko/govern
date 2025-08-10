@@ -42,6 +42,14 @@ Here `ARGS` is a Bash array, so ensure you invoke the script with Bash rather th
 
 When this configuration is loaded, ``govern.sh`` executes ``$CMD" "${ARGS[@]}``, ensuring that ``JAVGRANT_G5T NONE`` is treated as a single argument. For further details, please refer to ``local/sample.conf.sh``.
 
+## Testing
+
+Run the test suite with [Bats](https://github.com/bats-core/bats-core):
+
+```sh
+bats tests/
+```
+
 ## License
 
 govern.sh is released under 2-Cluse BSD License.  
