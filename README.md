@@ -31,11 +31,16 @@ pi@rpi3b:~ $
 
 If you want to start, stop, or display a specific process, for example, use ``govern.sh sample.conf.sh start`` to initiate the process defined in sample.conf.sh.
 
-The configuration file necessitates the definition of environment variables of CMD, ARGS, and MARK. For further details, please refer to ``local/sample.conf.sh``.
+The configuration file necessitates the definition of environment variables of CMD, ARGS, and MARK. ARGS must be declared using Bash array syntax (`ARGS=(...)`) so that each parameter is passed separately. Because this syntax is specific to Bash, both `govern.sh` and its configuration files must be executed with Bash; POSIX `sh` does not support arrays. This approach allows arguments containing spaces to be quoted individually. For example:
 
-## Known issue
+```bash
+MARK="serial://ttyF9P:230400"
+CMD=$HOME/exec/str2str
+ARGS=(-in "$MARK" -a "JAVGRANT_G5T NONE" -out "tcpsvr://:$LPORT" -b 1)
+```
+Here `ARGS` is a Bash array, so ensure you invoke the script with Bash rather than `sh`.
 
-A single argument containing spaces cannot be represented. For example, one of the arguments for ``str2str ... -a "JAVGRANT_G5T NONE" ...`` is ``JAVGRANT_G5T NONE``. However, I could not pass this string containing spaces as a single argument to the program via an environment variable.
+When this configuration is loaded, ``govern.sh`` executes ``$CMD" "${ARGS[@]}``, ensuring that ``JAVGRANT_G5T NONE`` is treated as a single argument. For further details, please refer to ``local/sample.conf.sh``.
 
 ## License
 
