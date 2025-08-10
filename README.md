@@ -37,6 +37,14 @@ The configuration file necessitates the definition of environment variables of C
 
 A single argument containing spaces cannot be represented. For example, one of the arguments for ``str2str ... -a "JAVGRANT_G5T NONE" ...`` is ``JAVGRANT_G5T NONE``. However, I could not pass this string containing spaces as a single argument to the program via an environment variable.
 
+## Testing
+
+Run the test suite with [Bats](https://github.com/bats-core/bats-core):
+
+```sh
+bats tests/
+```
+
 ## License
 
 govern.sh is released under 2-Cluse BSD License.  
