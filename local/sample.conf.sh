@@ -9,15 +9,11 @@
 
 # With this example configuration, govern.sh executes:
 # ---
-#  $HOME/exec/str2str -in serial://ttyF9P -a "JAVGRANT_G5T NONE" -out tcpserver://:2001 -b 1
+#  $HOME/bin/str2str -in serial://ttyF9P -a "JAVGRANT_G5T NONE" -out tcpserver://:2001 -b 1
 # ---
 
-LPORT=2001
-DEV=ttyF9P
-
-if [ ! -e /dev/$DEV ]; then echo "$0: no /dev/$DEV"; exit 1; fi
-MARK="serial://$DEV:230400"
-CMD=$HOME/exec/str2str
-ARGS=(-in "$MARK" -a "JAVGRANT_G5T NONE" -out "tcpsvr://:$LPORT" -b 1)
+MARK="serial://ttyF9P:230400"
+CMD=$HOME/bin/str2str
+ARGS=(-in "$MARK" -a "JAVGRANT_G5T NONE" -out "tcpsvr://:2001" -b 1)
 
 # EOF
