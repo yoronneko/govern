@@ -117,7 +117,7 @@ do_cmd()
 
 # glob conf files
 # https://programwiz.org/2021/05/09/shellscript-in-bash-how-to-files-loop/
-mapfile -t CONF < <(find . -maxdepth 1 -name '*.conf.sh' -print)
+mapfile -t CONF < <(find . -maxdepth 1 -type f -name '*.conf.sh' -printf '%f\n' | sort)
 
 # determine whether specific conf file is selected or not
 # https://qiita.com/Hayao0819/items/0e04b39b0804a0d16020
