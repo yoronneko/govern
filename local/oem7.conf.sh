@@ -5,7 +5,7 @@
 # this configuration file.
 #   CMD:  the command file path to execute
 #   ARGS: the arguments required for the command (as an array)
-#   MARK: the process feature that is uniquely determind with ps command
+#   MARK: the process feature that is uniquely determined with ps command
 
 HOST=192.168.0.1
 RPORT=3002       # OEM729 ICOM2 (OEM7 raw)
