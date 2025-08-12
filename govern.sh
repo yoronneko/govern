@@ -116,7 +116,7 @@ do_cmd()
     esac
 }
 
-show_name() 
+show_name()
 {
     echo "Linux process governor ver.${VER} (${0##*/})"
 }
