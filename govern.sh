@@ -110,7 +110,7 @@ do_cmd()
             fi
             ;;
         *)
-            echo -e "${0##*/} [start|stop|restart|status]"
+            echo -e "${COL_YEL}${0##*/} [start|stop|restart|status]${COL_NOR}"
             exit 1
             ;;
     esac
