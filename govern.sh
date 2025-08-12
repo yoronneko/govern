@@ -27,12 +27,15 @@
 #   govern.sh sample.conf.sh status, or govern.sh sample.conf.sh:
 #       show the process status related to sample.conf.sh
 
+VER='0.1.0'
 BASE=$HOME/local
-if [[ ! -d $BASE ]]; then
-    echo "$BASE directory is not found."
-    exit 1
-fi
-cd "$BASE" || exit
+
+COL_RED='\033[31m'
+COL_GRN='\033[32m'
+COL_YEL='\033[33m'
+COL_MAG='\033[35m'
+COL_CYN='\033[36m'
+COL_NOR='\033[0m'
 
 cmd_start()
 {
@@ -47,9 +50,9 @@ cmd_start()
     sleep 0.1
     pid=$(get_pid "$MARK")
     if [[ $pid == "" ]]; then
-        echo "cannot start $conf"
+        echo -e "${COL_RED}cannot start $conf${COL_NOR}"
     else
-        echo "$conf started at pid $pid"
+        echo -e "${COL_GRN}$conf started at pid $pid${COL_NOR}"
     fi
 }
 
@@ -58,7 +61,7 @@ cmd_stop()
     local pid="$1"
     local conf="$2"
     kill "$pid"
-    echo "$conf stopped (pid $pid)"
+    echo -e "${COL_MAG}$conf stopped (pid $pid)${COL_NOR}"
 }
 
 get_pid()
@@ -82,12 +85,12 @@ do_cmd()
             if [[ "$pid" == "" ]]; then
                 cmd_start "$conf" "$MARK" "$CMD" "${ARGS[@]}"
             else
-                echo "$conf already running at pid $pid"
+                echo -e "${COL_GRN}$conf already running at pid $pid${COL_NOR}"
             fi
             ;;
         stop)
             if [[ "$pid" == "" ]]; then
-                echo "$conf already stopped"
+                echo -e "${COL_MAG}$conf already stopped${COL_NOR}"
             else
                 cmd_stop "$pid" "$conf"
             fi
@@ -101,19 +104,32 @@ do_cmd()
             ;;
         "" | status)
             if [[ "$pid" == "" ]]; then
-                echo "$conf stopped"
+                echo -e "${COL_MAG}$conf stopped${COL_NOR}"
             else
-                echo "$conf running at pid $pid"
+                echo -e "${COL_GRN}$conf running at pid $pid${COL_NOR}"
             fi
             ;;
         *)
-            echo "${0##*/} [start|stop|restart|status]"
+            echo -e "${0##*/} [start|stop|restart|status]"
             exit 1
             ;;
     esac
 }
 
+show_name() 
+{
+    echo "Linux process governor ver.${VER} (${0##*/})"
+}
+
+
 # --- main ---
+
+if [[ ! -d $BASE ]]; then
+    show_name
+    echo -e "${COL_RED}${0##*/}: directory $BASE is not found.${COL_NOR}"
+    exit 1
+fi
+cd "$BASE" || exit
 
 # glob conf files
 # https://programwiz.org/2021/05/09/shellscript-in-bash-how-to-files-loop/
@@ -125,27 +141,32 @@ if printf '%s\n' "${CONF[@]}" | grep -qx "$1"; then
     conf="$1"
     if [ -e "./$conf" ]; then
         unset MARK CMD ARGS
-            . ./"$conf"
-        [[ $? != 0 ]] && exit 1
-        if [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
-            echo "${0##*/}: \$MARK, \$CMD or \$ARGS not defined in $conf."
+            . "./$conf"
+        if [[ $? != 0 ]]; then
+            echo -e "${COL_YEL}$conf: error occurred${COL_NOR}"
             exit 1
+        elif [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
+            echo -e "${COL_YEL}$conf: \$MARK, \$CMD or \$ARGS not defined${COL_NOR}"
+            exit 1
+        else
+            do_cmd "$conf" "$MARK" "$CMD" "${ARGS[@]}" "$2"
         fi
-        do_cmd "$conf" "$MARK" "$CMD" "${ARGS[@]}" "$2"
     fi
     exit 0
 fi
 
+show_name
 for conf in "${CONF[@]}"; do
     if [ -e "$conf" ]; then
         unset MARK CMD ARGS
             . ./"$conf"
-        [[ $? != 0 ]] && continue
-        if [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
-            echo "${0##*/}: \$MARK, \$CMD or \$ARGS not defined in $conf."
-            exit 1
+        if [[ $? != 0 ]]; then
+            echo -e "${COL_YEL}$conf: error occurred, skipping${COL_NOR}"
+        elif [[ ! -v MARK || ! -v CMD || ! -v ARGS ]]; then
+            echo -e "${COL_YEL}$conf: \$MARK, \$CMD or \$ARGS not defined, skipping${COL_NOR}"
+        else
+            do_cmd "$conf" "$MARK" "$CMD" "${ARGS[@]}" "$1"
         fi
-        do_cmd "$conf" "$MARK" "$CMD" "${ARGS[@]}" "$1"
     fi
 done
 
