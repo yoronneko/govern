@@ -2,20 +2,19 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security fixes are provided for the latest released version and the default
+branch under active development.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| Version             | Supported          |
+| ------------------- | ------------------ |
+| main (unreleased)   | :white_check_mark: |
+| v0.1.x              | :white_check_mark: |
+| < v0.1              | :x:                |
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Please report vulnerabilities through GitHub Security Advisories:
+https://github.com/yoronneko/govern/security/advisories/new
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+You can expect an initial response within 7 days. After triage, we will share
+status updates and coordinate disclosure and remediation timelines.
